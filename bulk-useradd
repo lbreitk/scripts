@@ -1,5 +1,17 @@
 #!/bin/bash
-
+################################################################################
+# Style Guide: https://google.github.io/styleguide/shellguide.html
+# Bulk add users from file
+#
+# File should be a new-line delimited list of only user ids
+#
+# AUTHOR
+#   Layne Breitkreutz (LayneX.Breitkreutz@intel.com)
+#
+# REVISION HISTORY
+#   2020-02-01T00:45Z
+#     Script created
+################################################################################
 gen_password(){
     < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c6
 }
@@ -14,42 +26,45 @@ main(){
     local users=()
     local password
     local password_hash
+    local status_add
+    local status_expire
+    local fmt
+    fmt="%-12s%-12s%-40s%-12s%-12s\\n"
 
     # needs to be ran as root
     if [[ "$UID" != "0" ]]; then
-        printf "This script must be ran as root, attempting sudo...\\n"
-        exec sudo -- "$0" "$@"
+        printf "This script must be ran as root, Exiting\\n\\n"
+        exit 1
     fi
 
     # read file
     mapfile -t users < "$1"
 
-    printf "\\n"
+    printf "$fmt" "Username" "Password" "Password Hash" "User Add" "Password Expire"
+    printf "$fmt" "--------" "--------" "-------------" "--------" "---------------"
+    # printf "Username\t\tPassword\tPassword Hash\tUser Add\tPassword Expire\\n"
     for user in "${users[@]}"; do
         password="$(gen_password)"
         password_hash="$(gen_password_hash "${password}")"
-        printf "User: %s\\n" "${user}"
-        printf "Random Password: %s\\n" "${password}"
 
-        printf "Adding User: "
-        if useradd --create-home --shell /bin/bash --password "${password_hash}" "${user}"; then
-            printf "Okay\\n"
+        if true;then
+        # if useradd --create-home --shell /bin/bash --password "${password_hash}" "${user}"; then
+            status_add="Okay"
         else
             printf "Fail\\nAborting...\\n"
             exit 1
         fi 
-
-        printf "Expiring Password: "
-        if chage -d 0 "${user}"; then
-            printf "Okay\\n"
+        
+        if true; then
+        # if chage -d 0 "${user}"; then
+            status_expire="Okay"
         else
             printf "Fail\\nAborting...\\n"
             exit 1
         fi   
-        printf "\\n"
+        printf "$fmt" "${user}" "${password}" "${password_hash}" "${status_add}" "${status_expire}"
     done
 
+    printf "\\n"
 }
-if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
-    main "$@"
-fi
+main "$@"
