@@ -33,7 +33,7 @@ main(){
 
     # needs to be ran as root
     if [[ "$UID" != "0" ]]; then
-        printf "This script must be ran as root, Exiting\\n\\n"
+        printf "This script must be ran as root, Exiting\\n"
         exit 1
     fi
 
@@ -42,7 +42,6 @@ main(){
 
     printf "$fmt" "Username" "Password" "Password Hash" "User Add" "Password Expire"
     printf "$fmt" "--------" "--------" "-------------" "--------" "---------------"
-    # printf "Username\t\tPassword\tPassword Hash\tUser Add\tPassword Expire\\n"
     for user in "${users[@]}"; do
         password="$(gen_password)"
         password_hash="$(gen_password_hash "${password}")"
@@ -62,7 +61,7 @@ main(){
         fi   
         printf "$fmt" "${user}" "${password}" "${password_hash}" "${status_add}" "${status_expire}"
     done
-
     printf "\\n"
+    exit 0
 }
 main "$@"
