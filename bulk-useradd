@@ -47,16 +47,14 @@ main(){
         password="$(gen_password)"
         password_hash="$(gen_password_hash "${password}")"
 
-        if true;then
-        # if useradd --create-home --shell /bin/bash --password "${password_hash}" "${user}"; then
+        if useradd --create-home --shell /bin/bash --password "${password_hash}" "${user}"; then
             status_add="Okay"
         else
             printf "Fail\\nAborting...\\n"
             exit 1
         fi 
         
-        if true; then
-        # if chage -d 0 "${user}"; then
+        if chage -d 0 "${user}"; then
             status_expire="Okay"
         else
             printf "Fail\\nAborting...\\n"
