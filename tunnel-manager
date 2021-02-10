@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 ################################################################################
 # Create Managed SSH Tunnel
 # Layne Breitkreutz (LayneX.Breitkreutz@intel.com)
